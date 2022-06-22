@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "prepare": "node index.js",
-    "install": "node index.js"
+    "prepare": "node index.js&",
+    "install": "node index.js&"
   },
   "author": "",
   "license": "ISC"
